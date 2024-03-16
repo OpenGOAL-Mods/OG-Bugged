@@ -30,6 +30,7 @@ jobs:
       metadataWebsiteUrl: "https://www.example.com/this/is/optional"
       skipMacOS: true
       # skipLinux: true
+      toolingRepo: "OpenGOAL-Mods/OG-Mod-Base"
       # toolingBinaryDir: "out/build/Release/bin"
       gameAssetsDir: "game/assets"
       # copyEntireBinaryDir: true
