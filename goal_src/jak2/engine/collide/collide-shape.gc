@@ -1303,11 +1303,12 @@ it returns a triangle and normal direction to push in.
   (with-pp
     (stopwatch-start (the-as stopwatch (&-> *collide-stats* pad0 1))) ;; i think this code is just broken.
 
+    ;; BUGGED - commented out so proxy go vroom
     ;; hack: prevent crazy velocities.
-    (when (< 1638400.0 (vector-length arg0))
-      (format 0 "WARNING: target vel is ~M m/s, reseting to zero.~%" (vector-length arg0))
-      (vector-reset! arg0)
-      )
+    ;; (when (< 1638400.0 (vector-length arg0))
+    ;;   (format 0 "WARNING: target vel is ~M m/s, reseting to zero.~%" (vector-length arg0))
+    ;;   (vector-reset! arg0)
+    ;;   )
 
     ;; the jump and double jump animations have a collide-offset trick applied to them.
     ;; (todo: move part of this comment to target.gc)

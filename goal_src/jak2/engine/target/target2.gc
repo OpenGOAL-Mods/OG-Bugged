@@ -244,7 +244,9 @@
     (remove-setting! 'mode-name)
     )
   :trans (behavior ()
-    (when (or (cpad-pressed? (-> self control cpad number) r3) (< 2048.0 (target-height-above-ground)))
+    ;; BUGGED - revert to jak 1 to allow zoom walk
+    ;; (when (or (cpad-pressed? (-> self control cpad number) r3) (< 2048.0 (target-height-above-ground)))
+    (when (cpad-pressed? (-> self control cpad number) r3)
       (logclear! (-> *cpad-list* cpads (-> self control cpad number) button0-abs 0) (pad-buttons r3))
       (logclear! (-> *cpad-list* cpads (-> self control cpad number) button0-rel 0) (pad-buttons r3))
       (set! (-> self cam-user-mode) 'normal)
