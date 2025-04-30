@@ -294,14 +294,15 @@
       (set! (-> self draw shadow-ctrl settings shadow-dir quad) v1-55)
       )
     (twist-set! (-> self barrel) (the-as float #f) (the-as float #f) (-> (the-as target gp-0) gun fire-spin))
-    (if (or (logtest? (-> (the-as target gp-0) draw status)
-                      (draw-control-status no-draw no-draw-temp no-draw-bounds no-draw-bounds2)
-                      )
-            (zero? (-> (the-as target gp-0) skel active-channels))
-            )
-        (logior! (-> self draw status) (draw-control-status no-draw))
-        (logclear! (-> self draw status) (draw-control-status no-draw))
-        )
+    ;; BUGGED - don't hide gun/laser just because jak hidden (first person)
+    ;; (if (or (logtest? (-> (the-as target gp-0) draw status)
+    ;;                   (draw-control-status no-draw no-draw-temp no-draw-bounds no-draw-bounds2)
+    ;;                   )
+    ;;         (zero? (-> (the-as target gp-0) skel active-channels))
+    ;;         )
+    ;;     (logior! (-> self draw status) (draw-control-status no-draw))
+    ;;     (logclear! (-> self draw status) (draw-control-status no-draw))
+    ;;     )
     (if (logtest? (-> (the-as target gp-0) draw status) (draw-control-status force-fade))
         (logior! (-> self draw status) (draw-control-status force-fade))
         (logclear! (-> self draw status) (draw-control-status force-fade))
@@ -419,9 +420,10 @@
     (set! (-> self gun-type) (-> (the-as target (-> self parent 0)) game gun-type))
     (let ((a0-0 (ppointer->process (-> self parent))))
       (cond
-        ((focus-test? (the-as target a0-0) in-head)
-         (go-virtual hidden)
-         )
+        ;; BUGGED - allow gun while first-person
+        ;; ((focus-test? (the-as target a0-0) in-head)
+        ;;  (go-virtual hidden)
+        ;;  )
         ((nonzero? (-> (the-as target (-> self parent 0)) gun gun-type))
          (go-virtual use (the-as symbol a0-0))
          )
@@ -470,15 +472,16 @@
           (a0-1 (-> self parent))
           )
       (cond
-        ((focus-test?
-           (the-as target (if a0-1
-                              (the-as target (-> a0-1 0 self))
-                              )
-                   )
-           in-head
-           )
-         (go-virtual hidden)
-         )
+        ;; BUGGED - allow gun while first-person
+        ;; ((focus-test?
+        ;;    (the-as target (if a0-1
+        ;;                       (the-as target (-> a0-1 0 self))
+        ;;                       )
+        ;;            )
+        ;;    in-head
+        ;;    )
+        ;;  (go-virtual hidden)
+        ;;  )
         ((and (= (-> (the-as target (-> self parent 0)) gun gun-type) (pickup-type none))
               (or (not (-> (the-as target v1-0) skel top-anim frame-group))
                   (!= (-> (the-as target v1-0) skel top-anim interp) 1.0)

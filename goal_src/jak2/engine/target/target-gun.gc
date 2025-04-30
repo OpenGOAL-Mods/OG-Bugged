@@ -2074,6 +2074,11 @@
         )
     (matrix-lerp! gp-0 a1-0 a2-0 (-> self gun gun-daxter))
     (matrix->transformq (-> self gun gun-pos) gp-0)
+    ;; BUGGED - rotate gun to match first person camera, shift up slightly
+    (when (focus-test? self in-head)
+      (+! (-> (the-as vector (-> self gun gun-pos)) y) (meters 0.4))
+      (quaternion-normalize! (matrix->quaternion (-> self gun gun-pos quat) (math-camera-matrix)))
+      )
     (set! (-> self gun gun-pos scale quad) (-> self control scale quad))
     (when (and (using-gun? self)
                (and (focus-test? self edge-grab) (let ((v1-18 (ja-group)))
@@ -2555,7 +2560,9 @@
           0
           )
         )
-      (if (not (or (focus-test? self in-head) (= (-> self gun gun-type) (pickup-type eco-red))))
+      ;; BUGGED - show laser when first-person
+      ;; (if (not (or (focus-test? self in-head) (= (-> self gun gun-type) (pickup-type eco-red))))
+      (if (not (= (-> self gun gun-type) (pickup-type eco-red)))
           (gun-info-method-9 gp-0)
           )
       (if (and (logtest? (surface-flag spin) (-> self control current-surface flags))
@@ -2567,7 +2574,7 @@
           (set-time! (-> gp-0 fire-start-time))
           )
       (case (-> gp-0 gun-control)
-        ((1)
+        ((1) ;; red/yellow
          (when (and (cpad-pressed? (-> self control cpad number) r1)
                     (< (the-as time-frame (+ (-> gp-0 fire-delay) -30)) (- (current-time) (-> gp-0 fire-time)))
                     )
@@ -2600,7 +2607,7 @@
            #t
            )
          )
-        ((2)
+        ((2) ;; purple
          (when (and (cpad-hold? (-> self control cpad number) r1)
                     (and (not (handle->process (-> self gun charge-active?)))
                          (< (the-as time-frame (+ (-> gp-0 fire-delay) -30)) (- (current-time) (-> gp-0 fire-time)))
@@ -2629,7 +2636,7 @@
            #t
            )
          )
-        ((4)
+        ((4) ;; blue
          (cond
            ((cpad-hold? (-> self control cpad number) r1)
             (seek! (-> gp-0 fire-spinv) 218453.33 (* 145635.56 (seconds-per-frame)))

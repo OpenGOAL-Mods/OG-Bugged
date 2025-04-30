@@ -200,7 +200,8 @@
   )
 
 (let ((a0-22 (copy *duck-mods* 'global)))
-  (set! (-> a0-22 flags) (surface-flag gun-inactive))
+  ;; BUGGED - first person shooter
+  ;; (set! (-> a0-22 flags) (surface-flag gun-inactive))
   (set! *look-around-mods* a0-22)
   )
 
