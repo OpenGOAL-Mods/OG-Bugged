@@ -2608,6 +2608,10 @@
            )
          )
         ((2) ;; purple
+          ;; BUGGED - when let go of r1, make sure fire-pending is dropped to zero
+         (when (not (cpad-hold? (-> self control cpad number) r1))
+          (set! (-> self gun fire-pending) 0)
+          )
          (when (and (cpad-hold? (-> self control cpad number) r1)
                     (and (not (handle->process (-> self gun charge-active?)))
                          (< (the-as time-frame (+ (-> gp-0 fire-delay) -30)) (- (current-time) (-> gp-0 fire-time)))
