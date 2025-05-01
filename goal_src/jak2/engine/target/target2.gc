@@ -994,7 +994,9 @@
   )
 
 (let ((a0-79 (copy *walk-mods* 'global)))
-  (set! (-> a0-79 flags) (surface-flag gun-off gun-fast-exit))
+  ;; BUGGED - allow fall damage animation cancel
+  ;; (set! (-> a0-79 flags) (surface-flag gun-off gun-fast-exit))
+  (set! (-> a0-79 flags) (surface-flag gun-off gun-fast-exit look-around))
   (set! *hit-ground-hard-mods* a0-79)
   )
 
