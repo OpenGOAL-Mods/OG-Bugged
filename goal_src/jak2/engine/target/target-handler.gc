@@ -1032,6 +1032,17 @@
      (cond
        ((-> arg3 param 0)
         (target-gun-type-set! (the-as pickup-type (-> arg3 param 0)))
+        ;; BUGGED - when switching to peacemaker and already have fire-pending=5, increase it for higher peacemaker stack
+        (cond
+          ((and (= (-> arg3 param 0) (pickup-type eco-dark))
+                (= (-> self gun fire-pending) 5))
+            (set! (-> self gun fire-pending) 1000)
+            )
+          ((> (-> self gun fire-pending) 5)
+            ;; clear pending if you run out of peacemaker and had stacked 1000
+            (set! (-> self gun fire-pending) 0)
+            )
+          )
         )
        (else
          (set! v0-0 #t)
