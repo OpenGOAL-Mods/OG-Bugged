@@ -635,7 +635,9 @@
     (case message
       (('attack)
        (case (-> (the-as attack-info (-> block param 1)) mode)
-         (('mech-punch 'crush)
+         ;; BUGGED - let peacemaker destroy computers
+         ;; (('mech-punch 'crush)
+         (('mech-punch 'crush 'eco-dark)
           (go-virtual hit #f)
           )
          )
