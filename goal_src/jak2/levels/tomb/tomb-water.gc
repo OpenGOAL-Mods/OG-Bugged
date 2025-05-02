@@ -1499,13 +1499,14 @@
       )
     )
   :trans (behavior ()
-    (let ((gp-0 (-> self on-notice)))
-      (when gp-0
-        (if (script-eval (the-as pair gp-0))
+    ;; BUGGED - left/right tomb buttons always active
+    ;; (let ((gp-0 (-> self on-notice)))
+    ;;   (when gp-0
+    ;;     (if (script-eval (the-as pair gp-0))
             (go-virtual open #f)
-            )
-        )
-      )
+    ;;         )
+    ;;     )
+    ;;   )
     )
   :code sleep-code
   )
