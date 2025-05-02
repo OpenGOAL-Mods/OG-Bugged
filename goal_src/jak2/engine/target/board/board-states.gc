@@ -122,7 +122,7 @@
   (none)
   )
 
-
+(define-extern board-hovering? (function symbol))
 ;; WARN: Return type mismatch object vs none.
 (defbehavior target-board-spin-check target ()
   (when (and (or (cpad-pressed? (-> self control cpad number) r1)
@@ -223,7 +223,11 @@
              (not (and (= *cheat-mode* 'debug) (cpad-hold? (-> self control cpad number) r2)))
              )
     (set! (-> self board turn-anim-tilt?) #f)
-    (set! (-> self control mod-surface) *board-spin-mods*)
+    ;; BUGGED - allow for changing direction of momentum during swag hover
+    (if (and (board-hovering?) (cpad-hold? (-> self control cpad number) r1))
+      (set! (-> self control mod-surface) *board-hover-mods*)
+      (set! (-> self control mod-surface) *board-spin-mods*)
+      )
     (set-time! (-> self board unknown-time-frame03))
     (let ((gp-2 (new 'stack-no-clear 'vector)))
       (set! (-> gp-2 x) (* -0.0078125 (+ -128.0 (the float (-> self control cpad leftx)))))
