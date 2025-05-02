@@ -9,6 +9,7 @@
 (define-extern *board-duck-mods* surface)
 (define-extern *board-air-mods* surface)
 (define-extern *board-jump-mods* surface)
+(define-extern *board-hover-mods* surface)
 (define-extern *board-ride-jump-mods* surface)
 (define-extern *board-duck-jump-mods* surface)
 (define-extern *board-spin-mods* surface)
@@ -384,6 +385,13 @@
   (set! (-> v1-14 turnvvf) 0.0)
   (set! *board-flip-mods* v1-14)
   )
+
+;; BUGGED - allow for changing direction of momentum during swag hover
+(define *board-hover-mods* (copy *board-jump-mods* 'global))
+(set! (-> *board-hover-mods* name) 'spin)
+(set! (-> *board-hover-mods* seek0) 1.0)
+(set! (-> *board-hover-mods* seek90) 1.0)
+(set! (-> *board-hover-mods* seek180) 1.0)
 
 (define *board-wall-kick-mods* (new 'static 'surface
                                  :name 'jump
@@ -2503,7 +2511,7 @@
                     )
                 )
          )
-    ;; BUGGED - remove jetboard speed cap
+    ;; BUGGED - no jetboard speed cap
     ;; (set! (-> self board ride-speed) (fmax 0.0 (fmin f0-20 (-> self control current-surface transv-max))))
     (set! (-> self board ride-speed) (fmax 0.0 f0-20))
     )

@@ -61,8 +61,8 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
   (none)
   )
 
-(defmacro board-hovering? ()
-  `(and (logtest? (focus-status board) (-> *target* focus-status)) (> *target-board-hold-tricks* 1))
+(defun board-hovering? ()
+  (and (logtest? (focus-status board) (-> *target* focus-status)) (> *target-board-hold-tricks* 1))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
