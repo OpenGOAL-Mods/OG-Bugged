@@ -1499,7 +1499,7 @@
       )
     )
   :trans (behavior ()
-    ;; BUGGED - left/right tomb buttons always active
+    ;; BUGGED - tomb buttons always active (both left/right final ones and all the simon puzzle ones)
     ;; (let ((gp-0 (-> self on-notice)))
     ;;   (when gp-0
     ;;     (if (script-eval (the-as pair gp-0))

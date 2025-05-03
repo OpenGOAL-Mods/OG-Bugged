@@ -601,6 +601,10 @@
                         ((= v1-7 'pilot)
                          (target-standard-event-handler arg0 arg1 arg2 arg3)
                          )
+                        ;; BUGGED - allow guns on board
+                        ((= v1-7 'gun)
+                         (target-standard-event-handler arg0 arg1 arg2 arg3)
+                         )
                         )
                  )
            )
@@ -748,6 +752,7 @@
   )
 
 (defbehavior target-board-init target ()
+  ;; BUGGED - comment out next line to allow keeping gun out when mounting board (needs target-gun-joint-points change too)
   (target-gun-end-mode #f)
   (target-exit)
   (target-board-setup #t)
@@ -1582,6 +1587,7 @@
 
 (defbehavior target-board-joint-points target ()
   (when (-> self board board)
+    ;; BUGGED - node 25 is the "board" joint, unfortunately during gun anims it's put on jak's back
     (let ((a1-0 (-> self node-list data 25 bone transform)))
       (matrix->transformq (the-as transformq (-> self board board-trans)) a1-0)
       )
