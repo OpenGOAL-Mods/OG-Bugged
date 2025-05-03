@@ -209,7 +209,8 @@
     (target-gun-type-set! arg0)
     (set-time! (-> gp-0 gun-get-on-time))
     )
-  (set! (-> self board latch?) #f)
+  ;; BUGGED - allow guns on board
+  ;; (set! (-> self board latch?) #f)
   (set! (-> self gun put-away?) #f)
   (set! (-> self gun active?) #f)
   (set! (-> self gun surpress-time) 0)
@@ -2273,6 +2274,7 @@
                                          )
                                )
                           (focus-test? self dead dark)
+                          ;; BUGGED - comment out next line to allow keeping gun out when mounting board (needs target-board-init change too)
                           (-> self board latch?)
                           )
                       )

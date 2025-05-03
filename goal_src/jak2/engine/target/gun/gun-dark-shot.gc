@@ -161,11 +161,12 @@
 (defmethod spawn-impact-particles ((this gun-dark-shot))
   "Spawns associated particles with the projectile if applicable"
   (cond
-    ((and (and (-> this next-state) (= (-> this next-state name) 'startup))
-          (and *target* (focus-test? *target* in-head))
-          )
-     (kill-and-free-particles (-> this part))
-     )
+    ;; BUGGED - don't hide peacemaker particles when first person
+    ;; ((and (and (-> this next-state) (= (-> this next-state name) 'startup))
+    ;;       (and *target* (focus-test? *target* in-head))
+    ;;       )
+    ;;  (kill-and-free-particles (-> this part))
+    ;;  )
     (else
       (set! (-> *part-id-table* 219 init-specs 2 initial-valuef) (lerp 409.6 9216.0 (-> this size-t)))
       (set! (-> *part-id-table* 219 init-specs 8 initial-valuef) (lerp 0.0 32.0 (-> this size-t)))
