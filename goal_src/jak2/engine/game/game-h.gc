@@ -53,7 +53,7 @@
   (sf27 27)
   (sf28 28)
   (sf29 29)
-  (sf30 30)
+  (ghost 30) ;; hacking sf30 value for "ghost jak" effect
   (sf31 31)
   )
 

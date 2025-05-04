@@ -344,6 +344,9 @@
         (if (logtest? (state-flags rleg-no-ik) (-> arg0 state-flags))
             (format arg1 "rleg-no-ik ")
             )
+        (if (logtest? (state-flags ghost) (-> arg0 state-flags))
+            (format arg1 "ghost ")
+            )
         (format arg1 "~%")
         (format
           arg1
@@ -1556,6 +1559,15 @@
   )
 
 (defbehavior flag-setup target ()
+  ;; BUGGED - make sure walls are ignored for collision checks when in ghost mode
+  (cond 
+    ((logtest? (-> self state-flags) (state-flags ghost))
+      (set! (-> self control pat-ignore-mask mode) (pat-mode wall))
+      )
+    (else
+      (set! (-> self control pat-ignore-mask mode) (pat-mode ground)) ;; I guess ground is never ignored?
+      )
+    )
   (cond
     ((= (-> *cpad-list* cpads (-> self control cpad number) stick0-speed) 0.0)
      (if (zero? (-> self control time-between-zero-inputs))
@@ -1605,13 +1617,18 @@
         )
       )
     )
-  (when (and (cpad-pressed? (-> self control cpad number) r3)
+  ;; BUGGED - allow triangle for zoom too, as long as no triangle prompts
+  (when (and (or (cpad-pressed? (-> self control cpad number) r3) 
+                 (and (not (triangle-query-active?)) (cpad-pressed? (-> self control cpad number) triangle)))
              (zero? (-> self control remaining-ctrl-iterations))
              (not (logtest? (-> *kernel-context* prevent-from-run) (process-mask movie)))
              (not *pause-lock*)
              )
     (if (and (= (-> self cam-user-mode) 'normal)
-             (logtest? (-> self control mod-surface flags) (surface-flag look-around))
+             ;; BUGGED - don't require being grounded to zoom (infinite zoom chaining)
+             ;; (logtest? (-> self control mod-surface flags) (surface-flag look-around))
+             ;; BUGGED - if dead, must also be ghost to zoom
+             (= (focus-test? self dead) (logtest? (-> self state-flags) (state-flags ghost)))
              (not (focus-test? self edge-grab pole flut tube board pilot dark))
              (-> *setting-control* user-current allow-look-around)
              (time-elapsed? (the-as int (-> self no-look-around-wait)) (seconds 0.05))

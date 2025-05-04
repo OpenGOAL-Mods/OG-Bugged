@@ -29,6 +29,24 @@
     )
   )
 
+(defun triangle-query-active? ()
+  (let ((sv-24 (the-as gui-connection #f))
+        (sv-32 32))
+    (while (nonzero? sv-32)
+      (set! sv-32 (+ sv-32 -1))
+      (set! sv-24 (-> *gui-control* connections sv-32))
+      (when (and (nonzero? (-> sv-24 id))
+                 (= (gui-channel query) (-> sv-24 channel))
+                 (or (= (gui-action playing) (-> sv-24 action)) (= (gui-action playing) (-> sv-24 action)))
+                 (= (get-status *gui-control* (-> sv-24 id)) (gui-status active))
+                 )
+        (return #t)
+        )
+      )
+    )
+  #f
+  )
+
 (defun talker-surpress! ()
   (set! (-> *game-info* hint-play-time) (-> *display* base-clock frame-counter))
   0
