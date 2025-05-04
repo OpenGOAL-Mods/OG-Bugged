@@ -2904,7 +2904,7 @@
                     )
                )
       (logclear! (-> self focus-status) (focus-status dead hit))
-      (logclear! (-> self state-flags) (state-flags disable-attacks))
+      (logclear! (-> self state-flags) (state-flags disable-attacks ghost))
       )
     (let ((gp-1 (focus-test? self hit)))
       (target-exit)
