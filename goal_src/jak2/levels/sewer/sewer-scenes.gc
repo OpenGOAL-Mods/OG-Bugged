@@ -1306,6 +1306,10 @@
             )
           )
         )
+      ;; BUGGED - sewers turret skip
+      (when (and (entity-by-name "sew-gunturret-14")
+                 (logtest? (-> (entity-by-name "sew-gunturret-14") extra perm status) (entity-perm-status dead)))
+        (set! sv-96 0))
       (when (< sv-96 (-> self data-int32 0))
         (case sv-96
           ((3)
