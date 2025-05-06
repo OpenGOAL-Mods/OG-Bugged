@@ -295,12 +295,13 @@
   (let ((t9-0 (method-of-type spyder init-enemy-collision!)))
     (t9-0 this)
     )
-  (let ((v1-2 (-> this root root-prim)))
-    (set! (-> v1-2 prim-core collide-as) (collide-spec))
-    (set! (-> v1-2 prim-core collide-with) (collide-spec))
-    )
-  (set! (-> this root backup-collide-as) (collide-spec))
-  (set! (-> this root backup-collide-with) (collide-spec))
+  ;; BUGGED - give collision
+  ;; (let ((v1-2 (-> this root root-prim)))
+  ;;   (set! (-> v1-2 prim-core collide-as) (collide-spec))
+  ;;   (set! (-> v1-2 prim-core collide-with) (collide-spec))
+  ;;   )
+  ;; (set! (-> this root backup-collide-as) (collide-spec))
+  ;; (set! (-> this root backup-collide-with) (collide-spec))
   0
   0
   (none)

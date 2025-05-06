@@ -310,7 +310,9 @@
             (process-entity-status! arg0 (entity-perm-status no-kill) #t)
             (logclear! (-> arg0 focus-status) (focus-status disable))
             (logior! (-> arg0 bot-flags) (bot-flags bf06))
-            (set! (-> arg0 too-far-warn-dist) 286720.0)
+            ;; BUGGED - bigger bubble for failing (so you can kill last one and skip)
+            ;; (set! (-> arg0 too-far-warn-dist) 286720.0) ;; 70 meters
+            (set! (-> arg0 too-far-warn-dist) (meters 140))
             (set-setting! 'airlock #f 0.0 0)
             (let ((a1-3 (new 'stack-no-clear 'array 'symbol 3)))
               (set! (-> a1-3 2) 'atoll3)
@@ -371,7 +373,9 @@
         :waypoint-id 4
         :skip-to 10
         :on-set (lambda ((arg0 sig-atoll))
-          (set! (-> arg0 too-far-warn-dist) 286720.0)
+          ;; BUGGED - bigger bubble for failing (so you can kill last one and skip)
+          ;; (set! (-> arg0 too-far-warn-dist) 286720.0) ;; 70 meters
+          (set! (-> arg0 too-far-warn-dist) (meters 140))
           (let ((v1-2 (get-task-by-type (-> arg0 ai-ctrl) sigt-wait-spot arg0)))
             (set! (-> v1-2 bytes 5) 1)
             (set! (-> v1-2 bytes 6) 2)
@@ -379,29 +383,44 @@
             (set! (-> (the-as sigt-wait-spot v1-2) check-done)
                   (the-as
                     (function sigt-wait-spot sig symbol)
-                    (lambda ((arg0 object) (arg1 sig-atoll)) (with-pp
-                                                               (let ((a1-1 (new 'stack-no-clear 'event-message-block)))
-                                                                 (set! (-> a1-1 from) (process->ppointer pp))
-                                                                 (set! (-> a1-1 num-params) 1)
-                                                                 (set! (-> a1-1 message) 'query)
-                                                                 (set! (-> a1-1 param 0) (the-as uint 'beaten))
-                                                                 (let ((t9-0 send-event-function)
-                                                                       (v1-6 (-> arg1 actor-group 0 data 0 actor))
-                                                                       )
-                                                                   (when (t9-0
-                                                                           (if v1-6
-                                                                               (-> v1-6 extra process)
-                                                                               )
-                                                                           a1-1
-                                                                           )
-                                                                     (ai-task-control-method-12 (-> arg1 ai-ctrl) arg1)
-                                                                     (go-to-waypoint! arg1 5 #f)
-                                                                     (ai-task-control-method-10 (-> arg1 ai-ctrl) arg1)
-                                                                     #t
-                                                                     )
-                                                                   )
-                                                                 )
-                                                               )
+                    (lambda ((arg0 object) (arg1 sig-atoll))
+                            (with-pp
+                              ;; BUGGED - denfend sig skip
+                              (let ((s5 (entity-by-name "sniper-5")))
+                                (when (and s5 (logtest? (-> s5 extra perm status) (entity-perm-status dead)))
+                                  (process-release? arg1)
+                                  (process-release? *target*)
+                                  (reset-warn-time! arg1)
+                                  (clear-poi-and-focus! arg1)
+                                  (send-event arg1 'move-trans (-> arg1 sig-course spots 41))
+                                  (ai-task-control-method-12 (-> arg1 ai-ctrl) arg1)
+                                  (go-to-waypoint! arg1 40 #f)
+                                  (ai-task-control-method-10 (-> arg1 ai-ctrl) arg1)
+                                  (return #t)
+                                  )
+                                )
+                              (let ((a1-1 (new 'stack-no-clear 'event-message-block)))
+                                (set! (-> a1-1 from) (process->ppointer pp))
+                                (set! (-> a1-1 num-params) 1)
+                                (set! (-> a1-1 message) 'query)
+                                (set! (-> a1-1 param 0) (the-as uint 'beaten))
+                                (let ((t9-0 send-event-function)
+                                      (v1-6 (-> arg1 actor-group 0 data 0 actor))
+                                      )
+                                  (when (t9-0
+                                          (if v1-6
+                                              (-> v1-6 extra process)
+                                              )
+                                          a1-1
+                                          )
+                                    (ai-task-control-method-12 (-> arg1 ai-ctrl) arg1)
+                                    (go-to-waypoint! arg1 5 #f)
+                                    (ai-task-control-method-10 (-> arg1 ai-ctrl) arg1)
+                                    #t
+                                    )
+                                  )
+                                )
+                              )
                             )
                     )
                   )
