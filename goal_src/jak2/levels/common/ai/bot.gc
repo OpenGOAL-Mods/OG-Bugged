@@ -1011,6 +1011,7 @@
     (let ((f0-0 (vector-vector-xz-distance (-> *target* control trans) (-> arg0 root trans)))
           (f1-0 (-> arg0 too-far-warn-dist))
           )
+      ;; (format 0 "~D ~m ~m ~%" (-> arg0 waypoint waypoint-id) (-> arg0 too-far-warn-dist) (-> arg0 too-far-fail-dist-delta))
       (when (>= f0-0 f1-0)
         (if (>= (- f0-0 f1-0) (-> arg0 too-far-fail-dist-delta))
             (set! s5-0 2)
