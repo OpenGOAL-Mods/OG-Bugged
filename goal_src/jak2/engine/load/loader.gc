@@ -1085,6 +1085,9 @@
   0
   )
 
+(define-extern *load-state* load-state)
+(define-extern *backup-load-state* load-state)
+(define-extern assign-closest-checkpoint (function level-group symbol none))
 (defbehavior ja-abort-spooled-anim process-drawable ((arg0 spool-anim) (arg1 art-joint-anim) (arg2 int))
   (let ((s3-0 (new 'static 'sound-id)))
     (let ((v1-1
@@ -1101,7 +1104,16 @@
         )
     (str-play-stop (-> arg0 name) s3-0)
     )
-  (restore-load-state-and-cleanup *load-state*)
+  ;; og-bugged: special case to allow for idle deloads when we have vis-nick mismatch
+  ;; the last arg to assign-closest-checkpoint lets us hack around change-continue flag
+  ;; this makes it possible to get continue-points like palshaft-lobby ONLY via idle deload
+  (let ((should-idle-deload? (!= (-> *backup-load-state* vis-nick) (-> *load-state* vis-nick))))
+    (restore-load-state-and-cleanup *load-state*)
+    (when should-idle-deload?
+      (update! *load-state*)
+      (assign-closest-checkpoint *level* #f)
+      )
+    )
   (set! (-> *art-control* active-stream) #f)
   (logclear! (-> self skel status) (joint-control-status spooling spooling-not-last-block))
   (if (not (logtest? (-> self skel status) (joint-control-status sync-math)))
